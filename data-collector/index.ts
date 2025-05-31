@@ -1,10 +1,12 @@
 import QRCode from 'qrcode'
 import { Client, LocalAuth } from 'whatsapp-web.js'
-import z from 'zod/v4'
+import { z } from 'zod/v4'
+import { parseMessages } from './parseMessage'
 
 const envSchema = z.object(
   {
     WHATSAPP_GROUP_ID: z.string().min(1),
+    GOOGLE_GENERATIVE_AI_API_KEY: z.string().min(1),
   },
   { error: 'Required environment variables missing' },
 )
@@ -21,8 +23,15 @@ client.on('qr', async (qr) => {
 
 client.on('ready', async () => {
   console.log('Client is ready!')
-  const messages = await client.getChatById(env.WHATSAPP_GROUP_ID)
-  console.log(messages.lastMessage.body)
+  const chat = await client.getChatById(env.WHATSAPP_GROUP_ID)
+  const messages = await chat.fetchMessages({ limit: 10 })
+  const piiRemovedMessages = messages.map((message) => ({
+    senderId: message.from,
+    text: message.body,
+  }))
+  const result = await parseMessages(piiRemovedMessages)
+  console.log(JSON.stringify(piiRemovedMessages))
+  console.log(JSON.stringify(result))
 })
 
 client.on('message', (msg) => {
