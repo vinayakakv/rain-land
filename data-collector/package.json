@@ -1,0 +1,14 @@
+{
+  "name": "data-collector",
+  "module": "index.ts",
+  "type": "module",
+  "dependencies": {
+    "lefthook": "^1.11.13",
+    "qrcode": "^1.5.4",
+    "whatsapp-web.js": "^1.28.0",
+    "zod": "^3.25.42"
+  },
+  "devDependencies": {
+    "@types/qrcode": "^1.5.5"
+  }
+}
