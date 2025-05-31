@@ -1,6 +1,7 @@
 import QRCode from 'qrcode'
 import { Client, LocalAuth } from 'whatsapp-web.js'
 import { z } from 'zod/v4'
+import { fetchMessages } from './fetchMessages'
 import { parseMessages } from './parseMessage'
 
 const envSchema = z.object(
@@ -24,14 +25,12 @@ client.on('qr', async (qr) => {
 client.on('ready', async () => {
   console.log('Client is ready!')
   const chat = await client.getChatById(env.WHATSAPP_GROUP_ID)
-  const messages = await chat.fetchMessages({ limit: 10 })
-  const piiRemovedMessages = messages.map((message) => ({
-    senderId: message.from,
-    text: message.body,
-  }))
-  const result = await parseMessages(piiRemovedMessages)
-  console.log(JSON.stringify(piiRemovedMessages))
-  console.log(JSON.stringify(result))
+  const currentDate = new Date()
+  currentDate.setHours(0)
+  const messages = await fetchMessages({ chat, from: currentDate })
+  //  const result = await parseMessages(messages)
+  console.log(JSON.stringify(messages, null, 2))
+  // console.log(JSON.stringify(result))
 })
 
 client.on('message', (msg) => {
