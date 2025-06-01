@@ -24,7 +24,8 @@ export const fetchMessages = async (args: { chat: Chat; from: Date }) => {
     })),
   )
   return messagesWithSenderNames.map((message) => ({
-    senderId: message.from,
+    // biome-ignore lint/style/noNonNullAssertion: Since we are looking messages from a group, `author` will always be present
+    senderId: message.author!,
     text: message.body,
     timestamp: message.timestamp,
     senderName: message.senderName,

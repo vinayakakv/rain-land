@@ -3,6 +3,7 @@ import { Client, LocalAuth } from 'whatsapp-web.js'
 import { z } from 'zod/v4'
 import { fetchMessages } from './fetchMessages'
 import { parseMessages } from './parseMessage'
+import { prepareMessages } from './prepareMessages'
 
 const envSchema = z.object(
   {
@@ -26,8 +27,10 @@ client.on('ready', async () => {
   console.log('Client is ready!')
   const chat = await client.getChatById(env.WHATSAPP_GROUP_ID)
   const currentDate = new Date()
-  currentDate.setDate(currentDate.getDate() - 1)
-  const messages = await fetchMessages({ chat, from: currentDate })
+  currentDate.setDate(currentDate.getDate() - 2)
+  const messages = prepareMessages(
+    await fetchMessages({ chat, from: currentDate }),
+  )
   //  const result = await parseMessages(messages)
   console.log(JSON.stringify(messages, null, 2))
   // console.log(JSON.stringify(result))
