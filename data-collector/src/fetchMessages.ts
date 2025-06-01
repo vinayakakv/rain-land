@@ -5,17 +5,23 @@ export const fetchMessages = async (args: { chat: Chat; from: Date }) => {
   const limit = 10
   let tryCount = 1
   let messages: Message[] = []
-  const fromUnixTimestamp = from.getTime() / 1000
+  let messageCount = 0
+  const fromUnixTimestamp = Math.floor(from.getTime() / 1000)
   while (true) {
     messages = await chat.fetchMessages({ limit: limit * tryCount })
     const firstTimestamp = messages.at(0)?.timestamp
-    if (!firstTimestamp || firstTimestamp <= fromUnixTimestamp) {
+    if (
+      messages.length === messageCount ||
+      !firstTimestamp ||
+      firstTimestamp <= fromUnixTimestamp
+    ) {
       break
     }
     tryCount += 1
+    messageCount = messages.length
   }
   const filteredMessages = messages.filter(
-    (message) => message.timestamp >= fromUnixTimestamp,
+    (message) => message.body && message.timestamp > fromUnixTimestamp,
   )
   const messagesWithSenderNames = await Promise.all(
     filteredMessages.map(async (message) => ({
