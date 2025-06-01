@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:17.5
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: rainland
+      POSTGRES_PASSWORD: 984b3da9f
+      POSTGRES_DB: rainland
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
