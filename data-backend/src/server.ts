@@ -8,11 +8,13 @@ import { publicProcedure, router } from './trpc'
 const appRouter = router({
   insertRawMessages: publicProcedure
     .input(
-      z.object({
-        senderId: z.string().min(1),
-        text: z.string().min(1),
-        timestamp: z.coerce.date(),
-      }),
+      z
+        .object({
+          senderId: z.string().min(1),
+          text: z.string().min(1),
+          timestamp: z.coerce.date(),
+        })
+        .array(),
     )
     .mutation(async (request) => {
       const { input } = request
