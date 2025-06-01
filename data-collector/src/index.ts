@@ -4,6 +4,7 @@ import { env } from './env'
 import { fetchMessages } from './fetchMessages'
 import { parseMessages } from './parseMessage'
 import { prepareMessages } from './prepareMessages'
+import { trpc } from './trpc'
 
 const client = new Client({ authStrategy: new LocalAuth() })
 
@@ -21,8 +22,10 @@ client.on('ready', async () => {
   const messages = prepareMessages(
     await fetchMessages({ chat, from: currentDate }),
   )
+  console.log(messages)
+  const insertResult = await trpc.insertRawMessages.mutate(messages)
   //  const result = await parseMessages(messages)
-  console.log(JSON.stringify(messages, null, 2))
+  console.log(insertResult)
   // console.log(JSON.stringify(result))
 })
 

@@ -28,6 +28,6 @@ export const fetchMessages = async (args: { chat: Chat; from: Date }) => {
     senderId: message.author!,
     text: message.body,
     timestamp: message.timestamp,
-    senderName: message.senderName,
+    senderName: message.senderName || '',
   }))
 }

@@ -25,10 +25,10 @@ const aggregateSenderMessages = <T extends BaseMessage>(messages: T[]) => {
 export const prepareMessages = <T extends BaseMessage>(messages: T[]) => {
   const messagesWithDate = messages.map((message) => ({
     ...message,
-    date: new Date(message.timestamp * 1000),
+    timestamp: new Date(message.timestamp * 1000),
   }))
   const dayAggregations = Object.groupBy(messagesWithDate, (messages) =>
-    messages.date.toDateString(),
+    messages.timestamp.toDateString(),
   )
   return Object.values(dayAggregations)
     .flatMap((messagesOnDay) => aggregateSenderMessages(messagesOnDay || []))

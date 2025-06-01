@@ -1,0 +1,1 @@
+ALTER TABLE "raw_messages" ADD COLUMN "sender_name" varchar(128) NOT NULL;
