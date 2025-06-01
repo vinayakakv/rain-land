@@ -19,9 +19,12 @@ const appRouter = router({
     }),
   getLastMessageTimestamp: publicProcedure.query(async () => {
     const [firstRow] = await db
-      .select({ timestamp: sql<Date>`max(${rawMessagesTable.timestamp})` })
+      .select({
+        timestamp: sql<Date>`coalesce(max(${rawMessagesTable.timestamp}), date('1990-01-01'))`,
+      })
       .from(rawMessagesTable)
-    return firstRow?.timestamp || new Date(1990)
+    // biome-ignore lint/style/noNonNullAssertion: We always get a row because of `coalesce`
+    return firstRow!.timestamp
   }),
 })
 
