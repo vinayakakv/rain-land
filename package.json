@@ -7,7 +7,7 @@
     "@total-typescript/ts-reset": "^0.6.1",
     "@types/bun": "latest"
   },
-  "workspaces": ["data-collector"],
+  "workspaces": ["data-collector", "data-backend"],
   "peerDependencies": {
     "typescript": "^5.0.0"
   },
