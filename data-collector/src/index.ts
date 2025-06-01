@@ -26,15 +26,11 @@ client.on('ready', async () => {
   console.log('Client is ready!')
   const chat = await client.getChatById(env.WHATSAPP_GROUP_ID)
   const currentDate = new Date()
-  currentDate.setHours(0)
+  currentDate.setDate(currentDate.getDate() - 1)
   const messages = await fetchMessages({ chat, from: currentDate })
   //  const result = await parseMessages(messages)
   console.log(JSON.stringify(messages, null, 2))
   // console.log(JSON.stringify(result))
-})
-
-client.on('message', (msg) => {
-  console.log(msg.body)
 })
 
 client.initialize()
