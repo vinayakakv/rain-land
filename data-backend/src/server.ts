@@ -1,4 +1,5 @@
 import { createHTTPServer } from '@trpc/server/adapters/standalone'
+import { sql } from 'drizzle-orm'
 import { db } from './db'
 import { rawMessagesSchema, rawMessagesTable } from './db/schema'
 import { env } from './env'
@@ -16,6 +17,12 @@ const appRouter = router({
         return { success: false as const, error }
       }
     }),
+  getLastMessageTimestamp: publicProcedure.query(async () => {
+    const [firstRow] = await db
+      .select({ timestamp: sql<Date>`max(${rawMessagesTable.timestamp})` })
+      .from(rawMessagesTable)
+    return firstRow?.timestamp || new Date(1990)
+  }),
 })
 
 const server = createHTTPServer({

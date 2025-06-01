@@ -1,0 +1,1 @@
+CREATE INDEX "timestamp_idx" ON "raw_messages" USING btree ("timestamp");
