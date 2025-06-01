@@ -6,6 +6,7 @@ import { env } from './env'
 import { publicProcedure, router } from './trpc'
 
 const appRouter = router({
+  // TODO: We want auth here
   insertRawMessages: publicProcedure
     .input(rawMessagesSchema.array())
     .mutation(async (request) => {
