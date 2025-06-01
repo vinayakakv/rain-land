@@ -1,19 +1,9 @@
 import QRCode from 'qrcode'
 import { Client, LocalAuth } from 'whatsapp-web.js'
-import { z } from 'zod/v4'
+import { env } from './env'
 import { fetchMessages } from './fetchMessages'
 import { parseMessages } from './parseMessage'
 import { prepareMessages } from './prepareMessages'
-
-const envSchema = z.object(
-  {
-    WHATSAPP_GROUP_ID: z.string().min(1),
-    GOOGLE_GENERATIVE_AI_API_KEY: z.string().min(1),
-  },
-  { error: 'Required environment variables missing' },
-)
-
-const env = envSchema.parse(process.env)
 
 const client = new Client({ authStrategy: new LocalAuth() })
 
