@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX "row_unique_index" ON "raw_messages" USING btree ("sender_name","sender_id","text","timestamp");

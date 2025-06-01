@@ -11,7 +11,7 @@ const appRouter = router({
     .mutation(async (request) => {
       const { input } = request
       try {
-        await db.insert(rawMessagesTable).values(input)
+        await db.insert(rawMessagesTable).values(input).onConflictDoNothing()
         return { success: true as const }
       } catch (error) {
         return { success: false as const, error }

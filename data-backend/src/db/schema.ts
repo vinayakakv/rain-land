@@ -3,6 +3,7 @@ import {
   integer,
   pgTable,
   timestamp,
+  uniqueIndex,
   varchar,
 } from 'drizzle-orm/pg-core'
 import { createInsertSchema } from 'drizzle-zod'
@@ -14,9 +15,17 @@ export const rawMessagesTable = pgTable(
     senderId: varchar({ length: 128 }).notNull(),
     senderName: varchar({ length: 128 }).notNull(),
     text: varchar({ length: 2000 }).notNull(),
-    timestamp: timestamp().notNull(),
+    timestamp: timestamp({ withTimezone: true }).notNull(),
   },
-  (table) => [index('timestamp_idx').on(table.timestamp)],
+  (table) => [
+    index('timestamp_idx').on(table.timestamp),
+    uniqueIndex('row_unique_index').on(
+      table.senderName,
+      table.senderId,
+      table.text,
+      table.timestamp,
+    ),
+  ],
 )
 
 export const rawMessagesSchema = createInsertSchema(rawMessagesTable)

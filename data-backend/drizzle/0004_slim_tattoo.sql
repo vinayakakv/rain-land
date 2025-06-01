@@ -1,0 +1,1 @@
+ALTER TABLE "raw_messages" ALTER COLUMN "timestamp" SET DATA TYPE timestamp with time zone;
