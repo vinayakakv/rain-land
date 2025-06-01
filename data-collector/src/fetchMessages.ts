@@ -14,11 +14,19 @@ export const fetchMessages = async (args: { chat: Chat; from: Date }) => {
     }
     tryCount += 1
   }
-  return messages
-    .filter((message) => message.timestamp >= fromUnixTimestamp)
-    .map((message) => ({
-      senderId: message.from,
-      text: message.body,
-      timestamp: message.timestamp,
-    }))
+  const filteredMessages = messages.filter(
+    (message) => message.timestamp >= fromUnixTimestamp,
+  )
+  const messagesWithSenderNames = await Promise.all(
+    filteredMessages.map(async (message) => ({
+      ...message,
+      senderName: (await message.getContact()).pushname,
+    })),
+  )
+  return messagesWithSenderNames.map((message) => ({
+    senderId: message.from,
+    text: message.body,
+    timestamp: message.timestamp,
+    senderName: message.senderName,
+  }))
 }
