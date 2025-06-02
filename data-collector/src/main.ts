@@ -16,6 +16,7 @@ client.on('qr', async (qr) => {
 client.on('ready', async () => {
   console.log('Client is ready!')
   const chat = await client.getChatById(env.WHATSAPP_GROUP_ID)
+  await chat.syncHistory()
   const lastMessageTimestamp = new Date(
     await trpc.getLastMessageTimestamp.query(),
   )
@@ -27,9 +28,9 @@ client.on('ready', async () => {
   )
   if (messages.length === 0) {
     console.log(
-      `No new messages from last update time - ${lastMessageTimestamp}. Exiting.`,
+      `No new messages from last update time - ${lastMessageTimestamp}. Sleeping.`,
     )
-    process.exit(0)
+    return
   }
   console.log('Proceeding to send messages to server', messages)
   const insertResult = await trpc.insertRawMessages.mutate(messages)
