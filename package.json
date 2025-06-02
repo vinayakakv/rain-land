@@ -1,15 +1,17 @@
 {
   "name": "rain-land",
   "module": "index.ts",
-  "type": "module",
+  "packageManager": "bun@1.1.38",
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
     "@total-typescript/ts-reset": "^0.6.1",
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "turbo": "^2.5.4"
   },
-  "workspaces": ["data-collector", "data-backend"],
   "peerDependencies": {
     "typescript": "^5.8.3"
   },
-  "trustedDependencies": ["@biomejs/biome", "lefthook", "puppeteer"]
+  "trustedDependencies": ["@biomejs/biome", "lefthook", "puppeteer"],
+  "type": "module",
+  "workspaces": ["data-collector", "data-backend"]
 }
