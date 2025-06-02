@@ -9,11 +9,11 @@ export const fetchMessages = async (args: { chat: Chat; from: Date }) => {
   const fromUnixTimestamp = Math.floor(from.getTime() / 1000)
   while (true) {
     messages = await chat.fetchMessages({ limit: limit * tryCount })
-    const firstTimestamp = messages.at(0)?.timestamp
+    const lastTimestamp = messages.at(-1)?.timestamp
     if (
       messages.length === messageCount ||
-      !firstTimestamp ||
-      firstTimestamp <= fromUnixTimestamp
+      !lastTimestamp ||
+      lastTimestamp <= fromUnixTimestamp
     ) {
       break
     }
