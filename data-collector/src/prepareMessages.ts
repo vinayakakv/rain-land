@@ -1,39 +1,26 @@
+import type { proto } from 'baileys'
 import { env } from './env'
-
-type BaseMessage = {
-  timestamp: number
-  senderId: string
-  text: string
-}
 
 const anonymizeSenderId = (id: string) =>
   Bun.hash(`${env.SENDER_ID_HASH_SECRET}:${id}`).toString(16)
 
-const combineText = <T extends BaseMessage>(messages: T[]) => {
-  const first = messages.at(0)
-  if (!first) return null
-  return { ...first, text: messages.map((message) => message.text).join('\n') }
+export const fromInterestedGroup = (message: proto.IWebMessageInfo) => {
+  return message.key.remoteJid === env.WHATSAPP_GROUP_ID
 }
 
-const aggregateSenderMessages = <T extends BaseMessage>(messages: T[]) => {
-  const senderGroups = Object.groupBy(messages, (message) => message.senderId)
-  return Object.values(senderGroups)
-    .map((messagesBySender) => combineText(messagesBySender || []))
-    .filter(Boolean)
+export const transformMessgae = (message: proto.IWebMessageInfo) => {
+  const senderId = message.key.participant || message.key.remoteJid
+  const text = message.message?.conversation || ''
+  const messageTimestamp = Number(message.messageTimestamp || 0)
+  return {
+    senderId: anonymizeSenderId(senderId || ''),
+    senderName: message.pushName || '',
+    text,
+    timestamp: new Date(messageTimestamp * 1000) || new Date().getTime(),
+    valid: Boolean(senderId && text && messageTimestamp),
+  }
 }
 
-export const prepareMessages = <T extends BaseMessage>(messages: T[]) => {
-  const messagesWithDate = messages.map((message) => ({
-    ...message,
-    timestamp: new Date(message.timestamp * 1000),
-  }))
-  const dayAggregations = Object.groupBy(messagesWithDate, (messages) =>
-    messages.timestamp.toDateString(),
-  )
-  return Object.values(dayAggregations)
-    .flatMap((messagesOnDay) => aggregateSenderMessages(messagesOnDay || []))
-    .map((message) => ({
-      ...message,
-      senderId: anonymizeSenderId(message.senderId),
-    }))
-}
+export type Message = ReturnType<typeof transformMessgae>
+
+export const isValid = (message: Message) => message.valid

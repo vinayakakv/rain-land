@@ -2,6 +2,7 @@
 
 .turbo
 .wwebjs*
+.auth
 .vscode
 
 # Logs
