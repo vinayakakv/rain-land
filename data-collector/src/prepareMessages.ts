@@ -1,19 +1,19 @@
 import type { proto } from 'baileys'
 import { env } from './env'
 
-const anonymizeSenderId = (id: string) =>
-  Bun.hash(`${env.SENDER_ID_HASH_SECRET}:${id}`).toString(16)
-
 export const fromInterestedGroup = (message: proto.IWebMessageInfo) => {
-  return message.key.remoteJid === env.WHATSAPP_GROUP_ID
+  return (
+    message.key.remoteJid?.includes(env.WHATSAPP_GROUP_ID) &&
+    message.key.remoteJid.endsWith('@g.us')
+  )
 }
 
 export const transformMessgae = (message: proto.IWebMessageInfo) => {
   const senderId = message.key.participant || message.key.remoteJid
-  const text = message.message?.conversation || ''
+  const text = (message.message?.conversation || '').slice(0, 2000)
   const messageTimestamp = Number(message.messageTimestamp || 0)
   return {
-    senderId: anonymizeSenderId(senderId || ''),
+    senderId: senderId || '',
     senderName: message.pushName || '',
     text,
     timestamp: new Date(messageTimestamp * 1000) || new Date().getTime(),

@@ -78,10 +78,6 @@ socket.ev.on('messages.upsert', async ({ messages }) => {
   const filteredMessages = messages
     .filter(fromInterestedGroup)
     .map(transformMessgae)
-    .map((it) => {
-      console.log(it)
-      return it
-    })
     .filter(isValid)
   await insert(filteredMessages)
 })
