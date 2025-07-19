@@ -54,6 +54,7 @@ const insert = async (messages: Message[]) =>
       pendingMessages = currentBatch
       return
     }
+    pendingMessages = []
     log.info({ event: 'successfulInsert', insertCount: currentBatch.length })
   })
 
